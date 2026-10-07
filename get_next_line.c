@@ -1,64 +1,55 @@
 #include "get_next_line.h"
 
-int	check(char *buffer)
+int check(char *stash)
 {
-	int    i;
+	int	i;
 
 	i = 0;
-	while (buffer[i])
+	if (!ft_strlen(stash))
+		return (0);
+	while (stash[i])
 	{
-		if (buffer[i] == '\n')
+		if (stash[i] == '\n')
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-void	fill_buffer(char *buffer, int fd, char **lefties)
+void	copy(char **stash, char **ans)
 {
-	int	c;
+	int		i;
+	char	*tmp;
 
-	c = read(fd, buffer, BUFFER_SIZE);
-	buffer[c] = '\0';
-	*lefties = ft_strjoin(*lefties, buffer);
-	if (check(buffer) && c == BUFFER_SIZE)
-		fill_buffer(buffer, fd, lefties);
-}
-
-char	*get_line(char **lefties)
-{
-    int		len;
-    char	*ans;
-    int		i;
-    char	*tmp;
-
-    i = 0;
-    len = 0;
-    while ((*lefties)[len] && (*lefties)[len] != '\n')
-        len++;
-    len += ((*lefties)[len] == '\n');
-    ans = malloc(len + 1);
-    while (i < len)
-    {
-		ans[i] = *lefties[i];
+	i = 0;
+	while ((*stash)[i] && (*stash)[i] != '\n')
 		i++;
-	}
-	ans[i] = '\0';
-    tmp = malloc(ft_strlen(*lefties) - len + 1);
-    i = 0;
-    while ((*lefties)[len])
-        tmp[i++] = (*lefties)[len++];
-    tmp[i] = '\0';
-    free(*lefties);
-    *lefties = tmp;
-    return (ans);
+	if ((*stash)[i] == '\n')
+		i++;
+	(*ans) = malloc(i + 1);
+	ft_strlcpy(*ans, *stash, i + 1);
+	tmp = ft_strdup((*stash) + i);
+	free(*stash);
+	*stash = tmp;
+	free(tmp);
 }
 
 char	*get_next_line(int fd)
 {
-    char		buffer[BUFFER_SIZE + 1];
-    static char	*lefties;
+	char *ans;
+	char buffer[BUFFER_SIZE + 1];
+	static char *stash;
+	int c;
 
-    fill_buffer(buffer, fd, &lefties);
-    return (get_line(&lefties));
+	while (!stash || check(stash))
+	{
+		c = read(fd, buffer, BUFFER_SIZE);
+		if (c > 0)
+		{
+			buffer[c] = '\0';
+			stash = ft_strjoin(stash, buffer);	
+		}
+	}
+	copy(&stash, &ans);
+	return (ans);
 }

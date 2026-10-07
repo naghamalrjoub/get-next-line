@@ -9,7 +9,9 @@
 #include <stdlib.h>
 
 char	*get_next_line(int fd);
-char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlen(const char *s);
+char	*ft_strjoin(char *s1, char *s2);
+size_t	ft_strlen(char *s);
+char	*ft_strdup(char *s);
+size_t	ft_strlcpy(char *dst, char *src, size_t size);
 
 #endif
