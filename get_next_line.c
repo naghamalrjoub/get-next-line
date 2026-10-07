@@ -56,10 +56,9 @@ char	*get_line(char **lefties)
 
 char	*get_next_line(int fd)
 {
-    char		*buffer;
+    char		buffer[BUFFER_SIZE + 1];
     static char	*lefties;
 
-    buffer = malloc(BUFFER_SIZE + 1);
     fill_buffer(buffer, fd, &lefties);
     return (get_line(&lefties));
 }
