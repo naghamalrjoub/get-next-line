@@ -43,7 +43,7 @@ void	copy(char **stash, char **ans, char **buffer)
 		*ans = malloc(i + 1);
 		if (!ans)
 		{
-			free_strings(stash, ans, buffer);
+			ans = NULL;
 			return ;
 		}
 		ft_strlcpy(*ans, *stash, i + 1);
