@@ -1,6 +1,5 @@
-#include <stdio.h>
-
 #include "get_next_line.h"
+#include <stdio.h>
 
 int check(char *stash)
 {
@@ -18,23 +17,48 @@ int check(char *stash)
 	return (1);
 }
 
-void	copy(char **stash, char **ans)
+void	*free_strings(char **stash, char **ans, char **buffer)
+{
+	free(*ans);
+	free(*stash);
+	free(*buffer);
+	*ans = NULL;
+	*stash = NULL;
+	*buffer = NULL;
+	return (NULL);
+}
+
+void	copy(char **stash, char **ans, char **buffer)
 {
 	int		i;
 	char	*tmp;
+
 	i = 0;
-	while ((*stash)[i] && (*stash)[i] != '\n')
-		i++;
-	if ((*stash)[i] == '\n')
-		i++;
-	*ans = malloc(i + 1);
-	ft_strlcpy(*ans, *stash, i + 1);
+	if (*stash) 
+	{
+		while ((*stash)[i] && (*stash)[i] != '\n')
+			i++;
+		if ((*stash)[i] == '\n')
+			i++;
+		*ans = malloc(i + 1);
+		if (!ans)
+		{
+			free_strings(stash, ans, buffer);
+			return ;
+		}
+		ft_strlcpy(*ans, *stash, i + 1);
+		tmp = ft_strdup(*stash + i);
+		free(*stash);
+		*stash = tmp;
+	}
+}
 
-	tmp = ft_strdup(*stash + i);
-
-	//printf("%s", *ans);
-	free(*stash);
-	*stash = tmp;
+int	allocate_buffer(char **buffer)
+{
+	*buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (0);
+	return (1);
 }
 
 char	*get_next_line(int fd)
@@ -44,27 +68,23 @@ char	*get_next_line(int fd)
 	static char *stash;
 	int c;
 
-	buffer = malloc(BUFFER_SIZE + 1);
-	c = 1;
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	c = allocate_buffer(&buffer);
 	while (c && (!stash || check(stash)))
 	{
 		c = read(fd, buffer, BUFFER_SIZE);
-		// printf("%d", c);
 		if (c > 0)
 		{
 			buffer[c] = '\0';
-		//	 printf("%s\n", buffer);
 			stash = ft_strjoin(stash, buffer);
-		//	printf("%s", stash);
 		}
-	//	printf("test");
+		else if (c < 0)
+			return (free_strings(&stash, &ans, &buffer));
 	}
-	// printf("stash before: %s\n", stash);
-	copy(&stash, &ans);
+	copy(&stash, &ans, &buffer);
 	if (!ft_strlen(ans))
-	{
-		return (NULL);
-	}
-	//printf("stash after: %s\n answer:", stash);
+		return(free_strings(&stash, &ans, &buffer));
+	free(buffer);
 	return (ans);
 }

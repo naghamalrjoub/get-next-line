@@ -10,7 +10,8 @@ int main()
 	while (s)
 	{
 		printf("%s", s);
+		free(s);
 		s = get_next_line(fd);
+	}
+	free(s);
 }
-	}	
-	
