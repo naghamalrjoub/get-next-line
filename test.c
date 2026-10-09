@@ -13,5 +13,6 @@ int main()
 		free(s);
 		s = get_next_line(fd);
 	}
-	free(s);
+	if (s)
+		free(s);
 }

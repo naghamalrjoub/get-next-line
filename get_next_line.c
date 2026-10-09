@@ -19,16 +19,16 @@ int check(char *stash)
 
 void	*free_strings(char **stash, char **ans, char **buffer)
 {
-	free(*ans);
-	free(*stash);
-	free(*buffer);
-	*ans = NULL;
-	*stash = NULL;
-	*buffer = NULL;
+	if (*ans)
+		free(*ans);
+	if (*stash)
+		free(*stash);
+	if (*buffer)
+		free(*buffer);
 	return (NULL);
 }
 
-void	copy(char **stash, char **ans, char **buffer)
+void	copy(char **stash, char **ans)
 {
 	int		i;
 	char	*tmp;
@@ -41,9 +41,9 @@ void	copy(char **stash, char **ans, char **buffer)
 		if ((*stash)[i] == '\n')
 			i++;
 		*ans = malloc(i + 1);
-		if (!ans)
+		if (!*ans)
 		{
-			ans = NULL;
+			*ans = NULL;
 			return ;
 		}
 		ft_strlcpy(*ans, *stash, i + 1);
@@ -56,7 +56,7 @@ void	copy(char **stash, char **ans, char **buffer)
 int	allocate_buffer(char **buffer)
 {
 	*buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
+	if (!*buffer)
 		return (0);
 	return (1);
 }
@@ -82,7 +82,7 @@ char	*get_next_line(int fd)
 		else if (c < 0)
 			return (free_strings(&stash, &ans, &buffer));
 	}
-	copy(&stash, &ans, &buffer);
+	copy(&stash, &ans);
 	if (!ft_strlen(ans))
 		return(free_strings(&stash, &ans, &buffer));
 	free(buffer);
