@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gnl.c                                              :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalrjoub <nalrjoub@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 10:33:28 by nalrjoub          #+#    #+#             */
-/*   Updated: 2026/10/10 10:33:29 by nalrjoub         ###   ########.fr       */
+/*   Created: 2026/10/10 11:48:26 by nalrjoub          #+#    #+#             */
+/*   Updated: 2026/10/10 11:51:42 by nalrjoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int check(char *stash)
+int	check(char *stash)
 {
 	int	i;
 
@@ -93,7 +93,7 @@ char	*get_line(char **stash)
 char	*get_next_line(int fd)
 {
 	char		*ans;
-	static char *stash;
+	static char	*stash;
 
 	stash = get_stash(stash, fd);
 	if (!stash)

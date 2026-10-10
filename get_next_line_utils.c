@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalrjoub <nalrjoub@learner.42.tech>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/10 11:50:31 by nalrjoub          #+#    #+#             */
+/*   Updated: 2026/10/10 11:51:01 by nalrjoub         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-#include <stdio.h>
 
 size_t	ft_strlen(char *s)
 {
@@ -29,7 +40,6 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size)
 	return (ft_strlen(src));
 }
 
-
 char	*ft_strdup(char *s)
 {
 	int		len;
@@ -49,7 +59,6 @@ char	*ft_strdup(char *s)
 	str[i] = '\0';
 	return (str);
 }
-
 
 char	*ft_strjoin(char *s1, char *s2)
 {
