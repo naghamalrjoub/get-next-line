@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 int	check(char *stash)
 {
@@ -95,6 +96,8 @@ char	*get_next_line(int fd)
 	char		*ans;
 	static char	*stash;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	stash = get_stash(stash, fd);
 	if (!stash)
 		return (NULL);

@@ -72,8 +72,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!str)
 		return (NULL);
 	if (s1)
-		ft_strlcpy(str, s1, i);
-	ft_strlcpy(str + i, s2, j);
+		ft_strlcpy(str, s1, i + 1);
+	ft_strlcpy(str + i, s2, j + 1);
 	free(s1);
 	str[i + j] = '\0';
 	return (str);
