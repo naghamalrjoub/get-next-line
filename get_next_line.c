@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gnl.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalrjoub <nalrjoub@learner.42.tech>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/10 10:33:28 by nalrjoub          #+#    #+#             */
+/*   Updated: 2026/10/10 10:33:29 by nalrjoub         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-#include <stdio.h>
 
 int check(char *stash)
 {
@@ -17,61 +28,16 @@ int check(char *stash)
 	return (1);
 }
 
-void	*free_strings(char **stash, char **ans, char **buffer)
+char	*get_stash(char *stash, int fd)
 {
-	if (*ans)
-		free(*ans);
-	if (*stash)
-		free(*stash);
-	if (*buffer)
-		free(*buffer);
-	return (NULL);
-}
+	char	*buffer;
+	int		c;
 
-void	copy(char **stash, char **ans)
-{
-	int		i;
-	char	*tmp;
-
-	i = 0;
-	if (*stash) 
-	{
-		while ((*stash)[i] && (*stash)[i] != '\n')
-			i++;
-		if ((*stash)[i] == '\n')
-			i++;
-		*ans = malloc(i + 1);
-		if (!*ans)
-		{
-			*ans = NULL;
-			return ;
-		}
-		ft_strlcpy(*ans, *stash, i + 1);
-		tmp = ft_strdup(*stash + i);
-		free(*stash);
-		*stash = tmp;
-	}
-}
-
-int	allocate_buffer(char **buffer)
-{
-	*buffer = malloc(BUFFER_SIZE + 1);
-	if (!*buffer)
-		return (0);
-	return (1);
-}
-
-char	*get_next_line(int fd)
-{
-	char *ans;
-	char *buffer;
-	static char *stash;
-	int c;
-
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
 		return (NULL);
-	c = allocate_buffer(&buffer);
-	while (c && (!stash || check(stash)))
+	c = 1;
+	while (c && check(stash))
 	{
 		c = read(fd, buffer, BUFFER_SIZE);
 		if (c > 0)
@@ -80,11 +46,64 @@ char	*get_next_line(int fd)
 			stash = ft_strjoin(stash, buffer);
 		}
 		else if (c < 0)
-			return (free_strings(&stash, &ans, &buffer));
+		{
+			free(buffer);
+			return (NULL);
+		}
 	}
-	copy(&stash, &ans);
-	if (!ft_strlen(ans))
-		return(free_strings(&stash, &ans, &buffer));
 	free(buffer);
+	return (stash);
+}
+
+void	trim_stash(char **stash, int i)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(*stash + i);
+	free(*stash);
+	*stash = tmp;
+}
+
+char	*get_line(char **stash)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	while ((*stash)[i] && (*stash)[i] != '\n')
+		i++;
+	if ((*stash)[i] == '\n')
+		i++;
+	tmp = malloc(i + 1);
+	if (!tmp)
+	{
+		free(*stash);
+		return (NULL);
+	}
+	ft_strlcpy(tmp, *stash, i + 1);
+	trim_stash(stash, i);
+	if (!stash)
+	{
+		free(tmp);
+		return (NULL);
+	}
+	return (tmp);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*ans;
+	static char *stash;
+
+	stash = get_stash(stash, fd);
+	if (!stash)
+		return (NULL);
+	ans = get_line(&stash);
+	if (!ft_strlen(ans))
+	{
+		free(stash);
+		free(ans);
+		return (NULL);
+	}
 	return (ans);
 }

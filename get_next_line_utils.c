@@ -53,28 +53,18 @@ char	*ft_strdup(char *s)
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	len;
 	char	*str;
 	size_t	i;
 	size_t	j;
 
-	i = 0;
-	j = 0;
-	len = ft_strlen(s1) + ft_strlen(s2);
-	str = malloc((len + 1) * sizeof(char));
-	while (i + j < len)
-	{
-		if (s1 != NULL && s1[i])
-		{
-			str[i + j] = s1[i];
-			i++;
-		}
-		else
-		{
-			str[i + j] = s2[j];
-			j++;
-		}
-	}
+	i = ft_strlen(s1);
+	j = ft_strlen(s2);
+	str = malloc((i + j + 1) * sizeof(char));
+	if (!str)
+		return (NULL);
+	if (s1)
+		ft_strlcpy(str, s1, i);
+	ft_strlcpy(str + i, s2, j);
 	free(s1);
 	str[i + j] = '\0';
 	return (str);
