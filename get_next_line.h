@@ -17,6 +17,13 @@
 #  define BUFFER_SIZE 42
 # endif
 
+# ifdef BUFFER_SIZE
+#  if BUFFER_SIZE < 0
+#   undef BUFFER_SIZE
+#   define BUFFER_SIZE 0
+#  endif
+# endif
+
 # include <unistd.h>
 # include <stdlib.h>
 
