@@ -45,10 +45,7 @@ char	*get_stash(char *stash, int fd)
 			buffer[c] = '\0';
 			stash = ft_strjoin(stash, buffer);
 			if (stash == NULL)
-			{
-				free(buffer);
 				return (NULL);
-			}
 		}
 		if (c < 0)
 			return (free_strings(&stash, &buffer));
