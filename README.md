@@ -29,4 +29,5 @@ then run the executable
 ## Resources
 - https://www.geeksforgeeks.org/c/g-fact-80/ (static variables).
 - man page for `read()` system call.
+- https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html (-Walloc-size error)
 - AI was used to check for possible memory leaks.
