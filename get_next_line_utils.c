@@ -70,11 +70,23 @@ char	*ft_strjoin(char *s1, char *s2)
 	j = ft_strlen(s2);
 	str = malloc((i + j + 1) * sizeof(char));
 	if (!str)
+	{
+		free(s1);
 		return (NULL);
+	}
 	if (s1)
 		ft_strlcpy(str, s1, i + 1);
 	ft_strlcpy(str + i, s2, j + 1);
 	free(s1);
 	str[i + j] = '\0';
 	return (str);
+}
+
+void	*free_strings(char **s1, char **s2)
+{
+	free(*s1);
+	free(*s2);
+	*s1 = NULL;
+	*s2 = NULL;
+	return (NULL);
 }

@@ -36,7 +36,7 @@ char	*get_stash(char *stash, int fd)
 
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (NULL);
+		return (free_strings(&stash, &buffer));
 	c = 1;
 	while (c && check(stash))
 	{
@@ -45,12 +45,14 @@ char	*get_stash(char *stash, int fd)
 		{
 			buffer[c] = '\0';
 			stash = ft_strjoin(stash, buffer);
+			if (stash == NULL)
+			{
+				free(buffer);
+				return (NULL);
+			}
 		}
-		else if (c < 0)
-		{
-			free(buffer);
-			return (NULL);
-		}
+		if (c < 0)
+			return (free_strings(&stash, &buffer));
 	}
 	free(buffer);
 	return (stash);
@@ -77,15 +79,13 @@ char	*get_line(char **stash)
 		i++;
 	tmp = malloc(i + 1);
 	if (!tmp)
-	{
-		free(*stash);
-		return (NULL);
-	}
+		return (free_strings(stash, &tmp));
 	ft_strlcpy(tmp, *stash, i + 1);
 	trim_stash(stash, i);
-	if (!stash)
+	if (!*stash)
 	{
 		free(tmp);
+		tmp = NULL;
 		return (NULL);
 	}
 	return (tmp);
@@ -103,10 +103,6 @@ char	*get_next_line(int fd)
 		return (NULL);
 	ans = get_line(&stash);
 	if (!ft_strlen(ans))
-	{
-		free(stash);
-		free(ans);
-		return (NULL);
-	}
+		return (free_strings(&ans, &stash));
 	return (ans);
 }
